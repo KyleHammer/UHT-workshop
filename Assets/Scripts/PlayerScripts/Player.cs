@@ -1,5 +1,5 @@
 using System;
-using ScriptableObjects;
+using BaseScriptableObjects;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -12,10 +12,12 @@ namespace PlayerScripts
         [SerializeField] private PlayerPlatformingStats platformingStats;
         private Vector3 velocity;
         private Vector2 movementInput;
-        private bool jumpHeld = true;
+        private bool jumpHeld = false;
+        private bool jumpReleased = false;
         
         private float gravity;
-        private float jumpVelocity;
+        private float maxJumpVelocity;
+        private float minJumpVelocity;
         private float velocityXSmoothing;
         
         private Controller2D controller;
@@ -24,9 +26,7 @@ namespace PlayerScripts
         {
             controller = GetComponent<Controller2D>();
 
-            gravity = -(2 * platformingStats.jumpHeight) / Mathf.Pow(platformingStats.timeToJumpApex, 2);
-            jumpVelocity = Mathf.Abs(gravity) * platformingStats.timeToJumpApex;
-            print("Gravity: " + gravity + " Jump Velocity: " + jumpVelocity);
+            UpdateJumpVariables();
         }
 
         private void Update()
@@ -38,6 +38,14 @@ namespace PlayerScripts
         {
             if(context.performed)
                 jumpHeld = true;
+
+            if (context.canceled)
+            {
+                jumpReleased = true;
+
+                if (platformingStats.autoJump)
+                    jumpHeld = false;
+            }
         }
 
         public void GetMovementInput(InputAction.CallbackContext context)
@@ -51,7 +59,11 @@ namespace PlayerScripts
 
             if (jumpHeld && controller.collisions.below)
             {
-                velocity.y = jumpVelocity;
+                velocity.y = maxJumpVelocity;
+            }
+            else if (jumpReleased && velocity.y > minJumpVelocity)
+            {
+                velocity.y = minJumpVelocity;
             }
 
             float targetVelocityX = movementInput.x * platformingStats.moveSpeed;
@@ -59,8 +71,20 @@ namespace PlayerScripts
                 (controller.collisions.below) ? platformingStats.accelerationTimeGrounded : platformingStats.accelerationTimeAirborne);
             velocity.y += gravity * Time.deltaTime;
             controller.Move(velocity * Time.deltaTime);
+            
+            if (!platformingStats.autoJump)
+                jumpHeld = false;
+            
+            jumpReleased = false;
+        }
 
-            jumpHeld = false;
+        public void UpdateJumpVariables()
+        {
+            gravity = -(2 * platformingStats.maxJumpHeight) / Mathf.Pow(platformingStats.timeToJumpApex, 2);
+            maxJumpVelocity = Mathf.Abs(gravity) * platformingStats.timeToJumpApex;
+            minJumpVelocity = Mathf.Sqrt(2 * Mathf.Abs(gravity) * platformingStats.minJumpHeight);
+            
+            print("Gravity: " + gravity + " Jump Velocity: " + maxJumpVelocity);
         }
     }
 }

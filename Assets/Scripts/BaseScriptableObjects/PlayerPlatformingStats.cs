@@ -1,11 +1,13 @@
 using UnityEngine;
 
-namespace ScriptableObjects
+namespace BaseScriptableObjects
 {
     [CreateAssetMenu(fileName = "NewPlatformingStats", menuName = "Stats/PlayerPlatformingStats")]
     public class PlayerPlatformingStats : ScriptableObject
     {
-        public float jumpHeight = 3;
+        public GameEvent updateStats;
+        public float maxJumpHeight = 3;
+        public float minJumpHeight = 1;
         public float timeToJumpApex = 0.3f;
         public float accelerationTimeAirborne = 0.2f;
         public float accelerationTimeGrounded = 0.1f;
@@ -13,5 +15,10 @@ namespace ScriptableObjects
         public float moveSpeed = 9f;
 
         public bool autoJump = false;
+
+        private void OnValidate()
+        {
+            updateStats.Raise();
+        }
     }
 }

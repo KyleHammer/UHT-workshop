@@ -12,8 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8df36184cdad4d34e884e86584b56765, type: 3}
   m_Name: DefaultPlatformingStats
   m_EditorClassIdentifier: 
-  jumpHeight: 3
+  updateStats: {fileID: 11400000, guid: d8207cd551e59f445ac885a86106ca03, type: 2}
+  maxJumpHeight: 3
+  minJumpHeight: 0.5
   timeToJumpApex: 0.3
   accelerationTimeAirborne: 0.1
   accelerationTimeGrounded: 0.075
   moveSpeed: 9
+  autoJump: 1
