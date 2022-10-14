@@ -31,7 +31,7 @@ namespace PlayerScripts
             UpdateJumpVariables();
         }
 
-        private void FixedUpdate()
+        private void Update()
         {
             if(!disableMovement)
                 MovementLogic();
@@ -97,7 +97,7 @@ namespace PlayerScripts
             maxJumpVelocity = Mathf.Abs(gravity) * platformingStats.timeToJumpApex;
             minJumpVelocity = Mathf.Sqrt(2 * Mathf.Abs(gravity) * platformingStats.minJumpHeight);
             
-            print("Gravity: " + gravity + " Jump Velocity: " + maxJumpVelocity);
+            //print("Gravity: " + gravity + " Jump Velocity: " + maxJumpVelocity);
         }
     }
 }

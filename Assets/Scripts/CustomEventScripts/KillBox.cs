@@ -1,21 +1,20 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class KillBox : MonoBehaviour
 {
-    private string sceneName;
-    
+    private Transform playerTransform;
+    private Vector2 playerStartPos;
+
     private void Start()
     {
-        sceneName = SceneManager.GetActiveScene().name;
+        playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
+        playerStartPos = playerTransform.position;
     }
 
     private void OnTriggerEnter2D(Collider2D col)
     {
-        if(col.CompareTag("Player"))
-            SceneManager.LoadScene(sceneName);
+        if (col.CompareTag("Player"))
+            playerTransform.position = playerStartPos;
     }
 }
