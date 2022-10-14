@@ -22,6 +22,8 @@ namespace PlayerScripts
         
         private Controller2D controller;
 
+        [SerializeField] private bool disableMovement = false;
+
         private void Start()
         {
             controller = GetComponent<Controller2D>();
@@ -31,7 +33,18 @@ namespace PlayerScripts
 
         private void Update()
         {
-            MovementLogic();
+            if(!disableMovement)
+                MovementLogic();
+        }
+
+        public void DisableMovement()
+        {
+            disableMovement = true;
+        }
+        
+        public void EnableMovement()
+        {
+            disableMovement = false;
         }
 
         public void GetJumpInput(InputAction.CallbackContext context)
