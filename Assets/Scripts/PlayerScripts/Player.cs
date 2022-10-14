@@ -31,7 +31,7 @@ namespace PlayerScripts
             UpdateJumpVariables();
         }
 
-        private void Update()
+        private void FixedUpdate()
         {
             if(!disableMovement)
                 MovementLogic();
